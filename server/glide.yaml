@@ -1,0 +1,8 @@
+package: panjiesw.com/mypict/server
+import:
+- package: github.com/ventu-io/go-shortid
+  version: ^1.0.0
+- package: gopkg.in/nullbio/null.v6
+  version: ^6.3.0
+- package: github.com/jackc/pgx
+  version: master

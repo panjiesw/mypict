@@ -1,0 +1,12 @@
+hash: 47a0201cbdd1d51e6467a39466f8da567bbfae10e11af7d06a816ae1c0e07f79
+updated: 2017-03-25T19:19:03.228135166+07:00
+imports:
+- name: github.com/jackc/pgx
+  version: 7bc5af61b8fb402c9c140e85b501ca7da5742bcb
+- name: github.com/ventu-io/go-shortid
+  version: 6c56cef5189ca1b3d5ef01dc07f4d611dfc0bb33
+- name: gopkg.in/nullbio/null.v6
+  version: 40264a2e6b7972d183906cf17663983c23231c82
+  subpackages:
+  - convert
+testImports: []
