@@ -6,8 +6,9 @@ import (
 	"panjiesw.com/mypict/server/model"
 )
 
-type DS interface {
+type Datastore interface {
 	ImageBSave(imgs []model.ImageS, uid null.String) *errs.AError
+	ImageByID(id string, img *model.ImageR) *errs.AError
 
 	GallerySave(g model.GalleryS, uid null.String) (*model.GalleryR, *errs.AError)
 }

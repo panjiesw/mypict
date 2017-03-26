@@ -47,5 +47,5 @@ type ImageR struct {
 	GalleryTitle  null.String `json:"gtitle"`
 	GalleryID     null.String `json:"gid"`
 	ContentPolicy uint8       `json:"cp"`
-	CreatedAt     time.Time   `json:"created"`
+	CreatedAt     string      `json:"created"`
 }

@@ -33,7 +33,8 @@ CREATE TABLE image_ids
     sid VARCHAR(32) NOT NULL,
     gid VARCHAR(32),
     CONSTRAINT PK_image_ids PRIMARY KEY (iid, sid),
-    CONSTRAINT FK_image_ids__iid FOREIGN KEY (iid) REFERENCES image (id) ON DELETE CASCADE
+    CONSTRAINT FK_image_ids__iid FOREIGN KEY (iid) REFERENCES image (id) ON DELETE CASCADE,
+    CONSTRAINT FK_image_ids__gid FOREIGN KEY (gid) REFERENCES gallery (id) ON DELETE CASCADE
 );
 CREATE INDEX IDX_image_ids__gid ON image_ids (gid);
 COMMENT ON TABLE image_ids IS 'Image identity';

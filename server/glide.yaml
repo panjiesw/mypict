@@ -6,3 +6,8 @@ import:
   version: ^6.3.0
 - package: github.com/jackc/pgx
   version: master
+- package: github.com/spf13/viper
+- package: github.com/inconshreveable/log15
+  version: ^2.11.0
+- package: github.com/mattes/migrate
+  version: master

@@ -29,6 +29,7 @@ typings/
 *.tgz
 .yarn-integrity
 .env
+.env.test
 *.exe
 *.dll
 *.so

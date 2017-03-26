@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/ventu-io/go-shortid"
 )
 
 func now(t **time.Time) {
@@ -11,7 +13,10 @@ func now(t **time.Time) {
 }
 
 func main() {
-	var t *time.Time
-	now(&t)
-	fmt.Printf("time: %v", t)
+	i := 1
+
+	for i < 54 {
+		fmt.Println(shortid.MustGenerate())
+		i++
+	}
 }
