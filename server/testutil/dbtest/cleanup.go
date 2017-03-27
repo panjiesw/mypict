@@ -1,7 +1,7 @@
-package db
+package dbtest
 
 func Cleanup() error {
-	c, err := createCon("")
+	c, err := PgxConn("")
 	if err != nil {
 		return err
 	}

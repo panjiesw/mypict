@@ -1,4 +1,4 @@
-package db
+package dbtest
 
 import "github.com/spf13/viper"
 

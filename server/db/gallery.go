@@ -1,8 +1,6 @@
 package db
 
 import (
-	"time"
-
 	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/errs"
 	"panjiesw.com/mypict/server/model"
@@ -22,7 +20,7 @@ func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.Galler
 		return nil, errs.NewDB("Failed to generate gid")
 	}
 
-	var created time.Time
+	var created string
 	//noinspection SqlResolve
 	query := `
 	INSERT INTO gallery (id, title, uid, cp, created)

@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"panjiesw.com/mypict/server/db"
-	db2 "panjiesw.com/mypict/server/testutil/db"
+	"panjiesw.com/mypict/server/testutil/dbtest"
 )
 
 var d *db.Database
@@ -22,14 +22,14 @@ func setupDB() []error {
 		wd = "./.."
 	}
 
-	if errs := db2.Migrate(wd); errs != nil {
+	if errs := dbtest.Migrate(wd); errs != nil {
 		for _, err := range errs {
 			fmt.Printf("Failed to migrate: %s\n", err.Error())
 		}
 		return errs
 	}
 
-	if err := db2.Fixtures(wd); err != nil {
+	if err := dbtest.Fixtures(wd); err != nil {
 		fmt.Printf("Failed to seed: %s\n", err.Error())
 		return []error{err}
 	}
@@ -46,14 +46,14 @@ func setupDB() []error {
 }
 
 func cleanupDB() {
-	defer db2.Cleanup()
+	defer dbtest.Cleanup()
 	d.Close()
 }
 
 func TestMain(m *testing.M) {
 	if err := setupDB(); err != nil {
 		if d == nil {
-			db2.Cleanup()
+			dbtest.Cleanup()
 		} else {
 			cleanupDB()
 		}

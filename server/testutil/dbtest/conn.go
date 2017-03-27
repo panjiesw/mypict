@@ -1,11 +1,11 @@
-package db
+package dbtest
 
 import (
 	"github.com/jackc/pgx"
 	"github.com/spf13/viper"
 )
 
-func createCon(db string) (*pgx.Conn, error) {
+func PgxConn(db string) (*pgx.Conn, error) {
 	conf := pgx.ConnConfig{
 		Host:      viper.GetString("database.host"),
 		Port:      uint16(viper.GetInt("database.port")),

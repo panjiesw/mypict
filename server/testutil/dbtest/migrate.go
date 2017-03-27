@@ -1,4 +1,4 @@
-package db
+package dbtest
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func Migrate(dir string) []error {
 }
 
 func createDB() error {
-	c, err := createCon("")
+	c, err := PgxConn("")
 	if err != nil {
 		return err
 	}

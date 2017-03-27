@@ -27,5 +27,5 @@ type GalleryR struct {
 	UserID        null.String `json:"uid"`
 	ContentPolicy uint8       `json:"cp"`
 	Images        []ImageSR   `json:"images"`
-	CreatedAt     time.Time   `json:"created"`
+	CreatedAt     string      `json:"created"`
 }

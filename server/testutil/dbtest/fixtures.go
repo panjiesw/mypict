@@ -1,4 +1,4 @@
-package db
+package dbtest
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 func Fixtures(dir string) error {
 
-	c, err := createCon(viper.GetString("database.name"))
+	c, err := PgxConn(viper.GetString("database.name"))
 	defer c.Close()
 
 	// seed images
