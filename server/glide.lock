@@ -1,8 +1,10 @@
-hash: 9473ecf900faa6ffb4b94c67d41744b468eba1bbfa880f4cb2948f2521c4f2b2
-updated: 2017-03-27T01:04:03.139285997+07:00
+hash: b032c92fd509e052ed2f9b037baff40480da08475cc7460a862d181b4207e749
+updated: 2017-03-28T21:45:34.184313346+07:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: bd2828f9f176e52d7222e565abb2d338d3f3c103
+- name: github.com/go-stack/stack
+  version: 100eb0c0a9c5b306ca2fb4f165df21d80ada4b82
 - name: github.com/hashicorp/hcl
   version: 99ce73d4fe576449f7a689d4fc2b2ad09a86bdaa
   subpackages:
@@ -15,7 +17,9 @@ imports:
   - json/scanner
   - json/token
 - name: github.com/inconshreveable/log15
-  version: b105bd37f74e5d9dc7b6ad7806715c7a2b83fd3f
+  version: 39bacc234bf1afd0b68573e95b45871f67ba2cd4
+  subpackages:
+  - term
 - name: github.com/jackc/pgx
   version: 7bc5af61b8fb402c9c140e85b501ca7da5742bcb
 - name: github.com/kr/fs
@@ -49,6 +53,14 @@ imports:
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/pkg/sftp
   version: 4d0e916071f68db74f8a73926335f809396d6b42
+- name: github.com/pressly/chi
+  version: 54f435d539226571eab1987ed862b1c0fdfdc892
+- name: github.com/SermoDigital/jose
+  version: f6df55f235c24f236d11dbcf665249a59ac2021f
+  subpackages:
+  - crypto
+  - jws
+  - jwt
 - name: github.com/spf13/afero
   version: 52e4a6cfac46163658bd4f123c49b6ee7dc75f78
   subpackages:
@@ -64,6 +76,8 @@ imports:
   version: 50515b700e02658272117a72bd641b6b7f1222e5
 - name: github.com/ventu-io/go-shortid
   version: 6c56cef5189ca1b3d5ef01dc07f4d611dfc0bb33
+- name: github.com/wuman/firebase-server-sdk-go
+  version: cc19d71ba3ecb33657f8a5f908e224ddc34864fb
 - name: golang.org/x/crypto
   version: 3c0d69f1777220f1a1d2ec373cb94a282f03eb42
   subpackages:
@@ -80,11 +94,6 @@ imports:
   subpackages:
   - transform
   - unicode/norm
-- name: gopkg.in/inconshreveable/log15.v2
-  version: b105bd37f74e5d9dc7b6ad7806715c7a2b83fd3f
-  subpackages:
-  - stack
-  - term
 - name: gopkg.in/nullbio/null.v6
   version: 40264a2e6b7972d183906cf17663983c23231c82
   subpackages:

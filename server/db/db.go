@@ -7,7 +7,7 @@ import (
 	"github.com/ventu-io/go-shortid"
 )
 
-func New() (*Database, error) {
+func Open() (*Database, error) {
 	pgxLvl, err := pgx.LogLevelFromString(viper.GetString("log.level.db"))
 	if err != nil {
 		pgxLvl = pgx.LogLevelWarn
@@ -56,7 +56,7 @@ func New() (*Database, error) {
 	l.SetHandler(hlf)
 
 	return &Database{
-		l:    l,
+		log:  l,
 		pool: pool,
 		siid: siid,
 		ssid: ssid,
@@ -65,7 +65,7 @@ func New() (*Database, error) {
 }
 
 type Database struct {
-	l    log.Logger
+	log  log.Logger
 	pool *pgx.ConnPool
 	siid *shortid.Shortid
 	ssid *shortid.Shortid

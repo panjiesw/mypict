@@ -50,4 +50,7 @@ var (
 
 	// ErrRequestInvalidCred is an error for when a login attempt failed because of bad credentials
 	ErrRequestInvalidCred = New("request", "invalid credentials", http.StatusBadRequest)
+
+	// ErrUnknown is an error when unexpected things happen
+	ErrUnknown = New("server", "internal error", http.StatusInternalServerError)
 )

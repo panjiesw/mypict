@@ -36,7 +36,7 @@ func setupDB() []error {
 
 	var err error
 
-	d, err = db.New()
+	d, err = db.Open()
 	if err != nil {
 		fmt.Printf("Failed to create db: %s", err.Error())
 		return []error{err}

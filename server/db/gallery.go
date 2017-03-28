@@ -9,14 +9,14 @@ import (
 func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.GalleryR, *errs.AError) {
 	tx, err := d.pool.Begin()
 	if err != nil {
-		d.l.Error("Transaction not acquired", "err", err, "gallery", g, "uid", uid)
+		d.log.Error("Transaction not acquired", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to acquire tx")
 	}
 	defer tx.Rollback()
 
 	id, err := d.sgid.Generate()
 	if err != nil {
-		d.l.Error("Failed to generate gallery id", "err", err, "gallery", g, "uid", uid)
+		d.log.Error("Failed to generate gallery id", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to generate gid")
 	}
 
@@ -29,7 +29,7 @@ func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.Galler
 
 	if err := tx.QueryRow(query, id, g.Title, uid, g.ContentPolicy).
 		Scan(&created); err != nil {
-		d.l.Error("Gallery insert error", "err", err, "gallery", g, "uid", uid)
+		d.log.Error("Gallery insert error", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to save gallery")
 	}
 
@@ -43,7 +43,7 @@ func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.Galler
 	}
 
 	if err := tx.Commit(); err != nil {
-		d.l.Error("Transaction failed to be committed", "err", err, "gallery", g, "uid", uid)
+		d.log.Error("Transaction failed to be committed", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Invalid saved gallery state")
 	}
 
@@ -77,7 +77,7 @@ func (d *Database) GalleryByID(id string, g *model.GalleryR) *errs.AError {
 	) gr`
 
 	if err := d.pool.QueryRow(query, id).Scan(g); err != nil {
-		d.l.Error("Failed to query gallery", "err", err, "id", id)
+		d.log.Error("Failed to query gallery", "err", err, "id", id)
 		return errs.ErrDBUnknown
 	}
 
