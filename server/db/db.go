@@ -3,33 +3,33 @@ package db
 import (
 	log "github.com/inconshreveable/log15"
 	"github.com/jackc/pgx"
-	"github.com/spf13/viper"
 	"github.com/ventu-io/go-shortid"
+	"panjiesw.com/mypict/server/config"
 )
 
-func Open() (*Database, error) {
-	pgxLvl, err := pgx.LogLevelFromString(viper.GetString("log.level.db"))
+func Open(conf *config.Conf) (*Database, error) {
+	pgxLvl, err := pgx.LogLevelFromString(conf.Log.Lvl("db"))
 	if err != nil {
 		pgxLvl = pgx.LogLevelWarn
 	}
 
-	lvl, err := log.LvlFromString(viper.GetString("log.level.db"))
+	lvl, err := log.LvlFromString(conf.Log.Lvl("db"))
 	if err != nil {
 		lvl = log.LvlWarn
 	}
 
 	pool, err := pgx.NewConnPool(pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
-			Host:      viper.GetString("database.host"),
-			Port:      uint16(viper.GetInt("database.port")),
-			User:      viper.GetString("database.user"),
-			Password:  viper.GetString("database.password"),
+			Host:      conf.Database.Host,
+			Port:      uint16(conf.Database.Port),
+			User:      conf.Database.User,
+			Password:  conf.Database.Password,
 			TLSConfig: nil,
-			Database:  viper.GetString("database.name"),
+			Database:  conf.Database.Name,
 			Logger:    log.New("module", "pgx"),
 			LogLevel:  pgxLvl,
 		},
-		MaxConnections: viper.GetInt("database.pool.max_con"),
+		MaxConnections: conf.Database.Pool.MaxCon,
 	})
 	if err != nil {
 		return nil, err

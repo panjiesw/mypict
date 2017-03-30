@@ -2,6 +2,7 @@ package handler
 
 import (
 	log "github.com/inconshreveable/log15"
+	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/fb"
 )
 
@@ -15,6 +16,16 @@ type RootCtx struct {
 
 func (r *RootCtx) IsLoggedIn() bool {
 	return r.user != nil
+}
+
+func (r *RootCtx) UID() null.String {
+	if r.IsLoggedIn() {
+		return null.NewString("", false)
+	}
+	if r.user.ID == "" {
+		return null.NewString("", false)
+	}
+	return null.StringFrom(r.user.ID)
 }
 
 type contextKey struct {

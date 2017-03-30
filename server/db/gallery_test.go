@@ -61,6 +61,12 @@ func TestDatabase_GalleryByID(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name:    "Not found",
+			args:    args{id: "somefoo"},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -69,6 +75,10 @@ func TestDatabase_GalleryByID(t *testing.T) {
 			got.CreatedAt = ""
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Database.GalleryByID() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if tt.wantErr {
 				return
 			}
 

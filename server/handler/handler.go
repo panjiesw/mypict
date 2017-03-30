@@ -6,6 +6,7 @@ import (
 
 	log "github.com/inconshreveable/log15"
 	"github.com/pressly/chi"
+	"panjiesw.com/mypict/server/config"
 	"panjiesw.com/mypict/server/db"
 )
 
@@ -15,8 +16,8 @@ type H struct {
 	DS  db.Datastore
 }
 
-func New() *H {
-	d, err := db.Open()
+func New(c *config.Conf) *H {
+	d, err := db.Open(c)
 	if err != nil {
 		panic(err)
 	}
@@ -34,6 +35,7 @@ func (h *H) initialize() {
 	h.Use(h.AddRootCtx)
 	h.Use(h.RequestID)
 	h.Use(h.LoggerMiddleware)
+	h.Mount("/_", h.apiRoutes())
 }
 
 func (h *H) AddRootCtx(next http.Handler) http.Handler {

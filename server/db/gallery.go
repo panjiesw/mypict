@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/jackc/pgx"
 	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/errs"
 	"panjiesw.com/mypict/server/model"
@@ -77,6 +78,9 @@ func (d *Database) GalleryByID(id string, g *model.GalleryR) *errs.AError {
 	) gr`
 
 	if err := d.pool.QueryRow(query, id).Scan(g); err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrDBIDNotExists
+		}
 		d.log.Error("Failed to query gallery", "err", err, "id", id)
 		return errs.ErrDBUnknown
 	}

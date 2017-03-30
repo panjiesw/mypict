@@ -6,13 +6,16 @@ import (
 	"os"
 	"testing"
 
+	"panjiesw.com/mypict/server/config"
 	"panjiesw.com/mypict/server/db"
 	"panjiesw.com/mypict/server/testutil/dbtest"
 )
 
-var d *db.Database
+var (
+	d *db.Database
 
-var cwd = flag.String("cwd", "", "set cwd")
+	cwd = flag.String("cwd", "", "set cwd")
+)
 
 func setupDB() []error {
 	var wd string
@@ -36,7 +39,13 @@ func setupDB() []error {
 
 	var err error
 
-	d, err = db.Open()
+	c, err := config.Parse("")
+	if err != nil {
+		fmt.Printf("Failed to init config: %s", err.Error())
+		return []error{err}
+	}
+
+	d, err = db.Open(c)
 	if err != nil {
 		fmt.Printf("Failed to create db: %s", err.Error())
 		return []error{err}

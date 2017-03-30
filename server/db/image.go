@@ -98,6 +98,9 @@ func (d *Database) ImageByID(id string, img *model.ImageR) *errs.AError {
 	) img`
 
 	if err := d.pool.QueryRow(query, id).Scan(img); err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrDBIDNotExists
+		}
 		d.log.Error("Failed to query image", "err", err, "id", id)
 		return errs.ErrDBUnknown
 	}

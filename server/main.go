@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/spf13/viper"
+	"panjiesw.com/mypict/server/config"
 	"panjiesw.com/mypict/server/handler"
 )
 
@@ -21,15 +22,21 @@ func init() {
 	viper.BindEnv("database.password", "MP_DB_PASS")
 	viper.BindEnv("database.pool.max_con", "MP_DB_POOL_CON")
 
+	viper.BindEnv("log.default", "MP_LOG")
 	viper.BindEnv("log.level.db", "MP_DB_LOG")
 
+	viper.SetDefault("log.default", "info")
 	viper.SetDefault("http.host", "localhost")
 	viper.SetDefault("http.port", 3000)
 }
 
 func main() {
-	addr := fmt.Sprintf("%s:%d", viper.GetString("http.host"), viper.GetInt("http.port"))
+	c, err := config.Parse("")
+	if err != nil {
+		panic(err)
+	}
+	addr := fmt.Sprintf("%s:%d", c.Http.Host, c.Http.Port)
 
-	s := handler.New()
+	s := handler.New(c)
 	http.ListenAndServe(addr, s)
 }

@@ -6,7 +6,6 @@ import:
   version: ^6.3.0
 - package: github.com/jackc/pgx
   version: master
-- package: github.com/spf13/viper
 - package: github.com/inconshreveable/log15
   version: master
 - package: github.com/mattes/migrate
@@ -15,3 +14,5 @@ import:
   version: ^2.0.0
 - package: github.com/wuman/firebase-server-sdk-go
   version: master
+- package: github.com/spf13/viper
+  version: 84f94806c67f59dd7ae87bc5351f7a9c94a4558d
