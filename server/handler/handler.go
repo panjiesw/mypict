@@ -2,40 +2,28 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
-	log "github.com/inconshreveable/log15"
 	"github.com/pressly/chi"
-	"panjiesw.com/mypict/server/config"
+	"go.uber.org/zap"
 	"panjiesw.com/mypict/server/db"
+	"panjiesw.com/mypict/server/util/config"
 )
 
-type H struct {
-	*chi.Mux
-	log log.Logger
-	DS  db.Datastore
-}
-
-func New(c *config.Conf) *H {
-	d, err := db.Open(c)
-	if err != nil {
-		panic(err)
-	}
-
-	l := log.New("module", "server")
-
+func New(c *config.Conf, ds db.Datastore, z *zap.SugaredLogger) *H {
 	r := chi.NewRouter()
 
-	h := &H{Mux: r, log: l, DS: d}
+	h := &H{Mux: r, z: z, ds: ds, c: c}
 	h.initialize()
 	return h
 }
 
-func (h *H) initialize() {
-	h.Use(h.AddRootCtx)
-	h.Use(h.RequestID)
-	h.Use(h.LoggerMiddleware)
-	h.Mount("/_", h.apiRoutes())
+type H struct {
+	*chi.Mux
+	z  *zap.SugaredLogger
+	ds db.Datastore
+	c  *config.Conf
 }
 
 func (h *H) AddRootCtx(next http.Handler) http.Handler {
@@ -43,4 +31,17 @@ func (h *H) AddRootCtx(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), RootCtxKey, &RootCtx{})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func (h *H) Start() {
+	addr := fmt.Sprintf("%s:%d", h.c.Http.Host, h.c.Http.Port)
+	h.z.Infof("Server listening on %s", addr)
+	http.ListenAndServe(addr, h)
+}
+
+func (h *H) initialize() {
+	h.Use(h.AddRootCtx)
+	h.Use(h.RequestID)
+	h.Use(h.LoggerMiddleware)
+	h.Mount("/_", h.apiRoutes())
 }

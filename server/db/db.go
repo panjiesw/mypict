@@ -1,21 +1,17 @@
 package db
 
 import (
-	log "github.com/inconshreveable/log15"
 	"github.com/jackc/pgx"
 	"github.com/ventu-io/go-shortid"
-	"panjiesw.com/mypict/server/config"
+	"go.uber.org/zap"
+	"panjiesw.com/mypict/server/util/config"
+	"panjiesw.com/mypict/server/util/logging"
 )
 
-func Open(conf *config.Conf) (*Database, error) {
+func Open(conf *config.Conf, z *zap.SugaredLogger) (*Database, error) {
 	pgxLvl, err := pgx.LogLevelFromString(conf.Log.Lvl("db"))
 	if err != nil {
 		pgxLvl = pgx.LogLevelWarn
-	}
-
-	lvl, err := log.LvlFromString(conf.Log.Lvl("db"))
-	if err != nil {
-		lvl = log.LvlWarn
 	}
 
 	pool, err := pgx.NewConnPool(pgx.ConnPoolConfig{
@@ -26,7 +22,7 @@ func Open(conf *config.Conf) (*Database, error) {
 			Password:  conf.Database.Password,
 			TLSConfig: nil,
 			Database:  conf.Database.Name,
-			Logger:    log.New("module", "pgx"),
+			Logger:    logging.NewPGXLog(z),
 			LogLevel:  pgxLvl,
 		},
 		MaxConnections: conf.Database.Pool.MaxCon,
@@ -50,13 +46,8 @@ func Open(conf *config.Conf) (*Database, error) {
 		return nil, err
 	}
 
-	l := log.New("module", "db")
-	hs := log.CallerStackHandler("%+v", log.StdoutHandler)
-	hlf := log.LvlFilterHandler(lvl, hs)
-	l.SetHandler(hlf)
-
 	return &Database{
-		log:  l,
+		z:    z,
 		pool: pool,
 		siid: siid,
 		ssid: ssid,
@@ -65,7 +56,7 @@ func Open(conf *config.Conf) (*Database, error) {
 }
 
 type Database struct {
-	log  log.Logger
+	z    *zap.SugaredLogger
 	pool *pgx.ConnPool
 	siid *shortid.Shortid
 	ssid *shortid.Shortid

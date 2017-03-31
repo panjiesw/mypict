@@ -1,12 +1,12 @@
-hash: b8f6b0f53188ca7ffc7f229f257fc08b49f9ef09f33aa47bf9ca519a06d8ae51
-updated: 2017-03-31T00:25:09.218477683+07:00
+hash: 4aa4f2b780074a74dae7ffb783ed009301757c0c558ef36d54154b724714aa39
+updated: 2017-03-31T01:42:51.067717618+07:00
 imports:
 - name: github.com/fsnotify/fsnotify
-  version: bd2828f9f176e52d7222e565abb2d338d3f3c103
+  version: 4da3e2cfbabc9f751898f250b49f2439785783a1
 - name: github.com/go-stack/stack
   version: 100eb0c0a9c5b306ca2fb4f165df21d80ada4b82
 - name: github.com/hashicorp/hcl
-  version: 99ce73d4fe576449f7a689d4fc2b2ad09a86bdaa
+  version: 630949a3c5fa3c613328e1b8256052cbc2327c9b
   subpackages:
   - hcl/ast
   - hcl/parser
@@ -22,14 +22,12 @@ imports:
   - term
 - name: github.com/jackc/pgx
   version: 7bc5af61b8fb402c9c140e85b501ca7da5742bcb
-- name: github.com/kr/fs
-  version: 2788f0dbd16903de03cb8186e5c7d97b69ad387b
 - name: github.com/lib/pq
-  version: e4af84aab01e159ca479940dbde304519e8e8811
+  version: 2704adc878c21e1329f46f6e56a1c387d788ff94
   subpackages:
   - oid
 - name: github.com/magiconair/properties
-  version: 0723e352fa358f9322c938cc2dadda874e9151a9
+  version: 51463bfca2576e06c62a8504b5c0f06d61312647
 - name: github.com/mattes/migrate
   version: 09640b136ecc31d20004efbf80ffdb295f879709
   subpackages:
@@ -40,54 +38,58 @@ imports:
   - migrate/direction
   - pipe
 - name: github.com/mattn/go-colorable
-  version: 6c903ff4aa50920ca86087a280590b36b3152b9c
+  version: ded68f7a9561c023e790de24279db7ebf473ea80
 - name: github.com/mattn/go-isatty
-  version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
+  version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/mitchellh/mapstructure
-  version: f3009df150dadf309fdee4a54ed65c124afad715
+  version: 53818660ed4955e899c0bcafa97299a388bd7c8e
 - name: github.com/pelletier/go-buffruneio
-  version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
+  version: c37440a7cf42ac63b919c752ca73a85067e05992
 - name: github.com/pelletier/go-toml
-  version: 45932ad32dfdd20826f5671da37a5f3ce9f26a8d
-- name: github.com/pkg/errors
-  version: 645ef00459ed84a119197bfb8d8205042c6df63d
-- name: github.com/pkg/sftp
-  version: 4d0e916071f68db74f8a73926335f809396d6b42
+  version: e32a2e04744250647a72bf17da1b09befc03b6b1
 - name: github.com/pressly/chi
-  version: 54f435d539226571eab1987ed862b1c0fdfdc892
+  version: e6033ea75479391a4bce3918fc119cad31e1cb30
   subpackages:
   - render
 - name: github.com/SermoDigital/jose
-  version: f6df55f235c24f236d11dbcf665249a59ac2021f
+  version: 2bd9b81ac51d6d6134fcd4fd846bd2e7347a15f9
   subpackages:
   - crypto
   - jws
   - jwt
 - name: github.com/spf13/afero
-  version: 52e4a6cfac46163658bd4f123c49b6ee7dc75f78
+  version: 9be650865eab0c12963d8753212f4f9c66cdcf12
   subpackages:
   - mem
-  - sftp
 - name: github.com/spf13/cast
-  version: 2580bc98dc0e62908119e4737030cc2fdfc45e4c
+  version: ce135a4ebeee6cfe9a26c93ee0d37825f26113c7
 - name: github.com/spf13/jwalterweatherman
-  version: 33c24e77fb80341fe7130ee7c594256ff08ccc46
+  version: fa7ca7e836cf3a8bb4ebf799f472c12d7e903d66
 - name: github.com/spf13/pflag
-  version: dabebe21bf790f782ea4c7bbd2efc430de182afd
+  version: d16db1e50e33dff1b6cdf37596cef36742128670
 - name: github.com/spf13/viper
   version: 84f94806c67f59dd7ae87bc5351f7a9c94a4558d
 - name: github.com/ventu-io/go-shortid
   version: 6c56cef5189ca1b3d5ef01dc07f4d611dfc0bb33
 - name: github.com/wuman/firebase-server-sdk-go
   version: cc19d71ba3ecb33657f8a5f908e224ddc34864fb
-- name: golang.org/x/crypto
-  version: 3c0d69f1777220f1a1d2ec373cb94a282f03eb42
+- name: go.uber.org/atomic
+  version: 3b8db5e93c4c02efbc313e17b2e796b0914a01fb
+- name: go.uber.org/zap
+  version: 4257c7cf05477d92ec25c31cfd3d60e89575f18a
+  subpackages:
+  - buffer
+  - internal/bufferpool
+  - internal/color
+  - internal/exit
+  - internal/multierror
+  - zapcore
 - name: golang.org/x/sys
-  version: c200b10b5d5e122be351b67af224adc6128af5bf
+  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
   subpackages:
   - unix
 - name: golang.org/x/text
-  version: 5a42fa2464759cbb7ee0af9de00b54d69f09a29c
+  version: 3aa6d803466d99ea1bdf4af99e6db53299c02bd7
   subpackages:
   - transform
   - unicode/norm
@@ -96,5 +98,5 @@ imports:
   subpackages:
   - convert
 - name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
 testImports: []

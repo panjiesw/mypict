@@ -3,7 +3,7 @@ package handler
 import (
 	log "github.com/inconshreveable/log15"
 	"gopkg.in/nullbio/null.v6"
-	"panjiesw.com/mypict/server/fb"
+	"panjiesw.com/mypict/server/util/fb"
 )
 
 var RootCtxKey = &contextKey{"RootContext"}

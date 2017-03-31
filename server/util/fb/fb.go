@@ -8,7 +8,7 @@ import (
 	log "github.com/inconshreveable/log15"
 	"github.com/spf13/viper"
 	"github.com/wuman/firebase-server-sdk-go"
-	"panjiesw.com/mypict/server/errs"
+	"panjiesw.com/mypict/server/util/errs"
 )
 
 var logger = log.New("module", "fb")

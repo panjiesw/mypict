@@ -2,8 +2,8 @@ package db
 
 import (
 	"gopkg.in/nullbio/null.v6"
-	"panjiesw.com/mypict/server/errs"
 	"panjiesw.com/mypict/server/model"
+	"panjiesw.com/mypict/server/util/errs"
 )
 
 type Datastore interface {

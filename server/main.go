@@ -1,33 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/spf13/viper"
-	"panjiesw.com/mypict/server/config"
+	"panjiesw.com/mypict/server/db"
 	"panjiesw.com/mypict/server/handler"
+	"panjiesw.com/mypict/server/util/config"
+	"panjiesw.com/mypict/server/util/logging"
 )
 
 func init() {
-	viper.SetEnvPrefix("mp")
-
-	viper.BindEnv("http.host", "MP_HTTP_HOST")
-	viper.BindEnv("http.port", "MP_HTTP_PORT")
-
-	viper.BindEnv("database.name", "MP_DB_NAME")
-	viper.BindEnv("database.host", "MP_DB_HOST")
-	viper.BindEnv("database.port", "MP_DB_PORT")
-	viper.BindEnv("database.user", "MP_DB_USER")
-	viper.BindEnv("database.password", "MP_DB_PASS")
-	viper.BindEnv("database.pool.max_con", "MP_DB_POOL_CON")
-
-	viper.BindEnv("log.default", "MP_LOG")
-	viper.BindEnv("log.level.db", "MP_DB_LOG")
-
-	viper.SetDefault("log.default", "info")
-	viper.SetDefault("http.host", "localhost")
-	viper.SetDefault("http.port", 3000)
+	config.BindEnv("MP")
 }
 
 func main() {
@@ -35,8 +16,20 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	addr := fmt.Sprintf("%s:%d", c.Http.Host, c.Http.Port)
 
-	s := handler.New(c)
-	http.ListenAndServe(addr, s)
+	zc := logging.NewZapConfig(c.Env)
+	z, err := zc.Build()
+	if err != nil {
+		panic(err)
+	}
+
+	zl := z.Sugar().Named("server")
+
+	d, err := db.Open(c, zl.Named("db"))
+	if err != nil {
+		zl.Fatalf("Failed to open db connection: %v", err)
+	}
+
+	s := handler.New(c, d, zl.Named("handler"))
+	s.Start()
 }

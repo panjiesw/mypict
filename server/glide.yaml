@@ -16,3 +16,5 @@ import:
   version: master
 - package: github.com/spf13/viper
   version: 84f94806c67f59dd7ae87bc5351f7a9c94a4558d
+- package: go.uber.org/zap
+  version: ^1.0.0

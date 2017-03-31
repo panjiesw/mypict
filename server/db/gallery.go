@@ -3,21 +3,21 @@ package db
 import (
 	"github.com/jackc/pgx"
 	"gopkg.in/nullbio/null.v6"
-	"panjiesw.com/mypict/server/errs"
 	"panjiesw.com/mypict/server/model"
+	"panjiesw.com/mypict/server/util/errs"
 )
 
 func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.GalleryR, *errs.AError) {
 	tx, err := d.pool.Begin()
 	if err != nil {
-		d.log.Error("Transaction not acquired", "err", err, "gallery", g, "uid", uid)
+		d.z.Errorw("Transaction not acquired", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to acquire tx")
 	}
 	defer tx.Rollback()
 
 	id, err := d.sgid.Generate()
 	if err != nil {
-		d.log.Error("Failed to generate gallery id", "err", err, "gallery", g, "uid", uid)
+		d.z.Errorw("Failed to generate gallery id", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to generate gid")
 	}
 
@@ -30,7 +30,7 @@ func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.Galler
 
 	if err := tx.QueryRow(query, id, g.Title, uid, g.ContentPolicy).
 		Scan(&created); err != nil {
-		d.log.Error("Gallery insert error", "err", err, "gallery", g, "uid", uid)
+		d.z.Errorw("Gallery insert error", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Failed to save gallery")
 	}
 
@@ -44,7 +44,7 @@ func (d *Database) GallerySave(g model.GalleryS, uid null.String) (*model.Galler
 	}
 
 	if err := tx.Commit(); err != nil {
-		d.log.Error("Transaction failed to be committed", "err", err, "gallery", g, "uid", uid)
+		d.z.Errorw("Transaction failed to be committed", "err", err, "gallery", g, "uid", uid)
 		return nil, errs.NewDB("Invalid saved gallery state")
 	}
 
@@ -81,7 +81,7 @@ func (d *Database) GalleryByID(id string, g *model.GalleryR) *errs.AError {
 		if err == pgx.ErrNoRows {
 			return errs.ErrDBIDNotExists
 		}
-		d.log.Error("Failed to query gallery", "err", err, "id", id)
+		d.z.Errorw("Failed to query gallery", "err", err, "id", id)
 		return errs.ErrDBUnknown
 	}
 
