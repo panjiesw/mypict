@@ -9,7 +9,6 @@ import (
 	"panjiesw.com/mypict/server/db"
 	"panjiesw.com/mypict/server/util/config"
 	"panjiesw.com/mypict/server/util/dbtest"
-	"panjiesw.com/mypict/server/util/logging"
 )
 
 var (
@@ -46,14 +45,7 @@ func setupDB() []error {
 		return []error{err}
 	}
 
-	zc := logging.NewZapConfig(c.Env)
-	z, err := zc.Build()
-	if err != nil {
-		fmt.Printf("Failed to init logging: %v", err)
-		return []error{err}
-	}
-
-	d, err = db.Open(c, z.Sugar().Named("test").Named("db"))
+	d, err = db.Open(c)
 	if err != nil {
 		fmt.Printf("Failed to create db: %s", err.Error())
 		return []error{err}

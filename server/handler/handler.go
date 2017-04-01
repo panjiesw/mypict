@@ -5,23 +5,23 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/mgutz/logxi"
 	"github.com/pressly/chi"
-	"go.uber.org/zap"
 	"panjiesw.com/mypict/server/db"
 	"panjiesw.com/mypict/server/util/config"
 )
 
-func New(c *config.Conf, ds db.Datastore, z *zap.SugaredLogger) *H {
+func New(c *config.Conf, ds db.Datastore) *H {
 	r := chi.NewRouter()
 
-	h := &H{Mux: r, z: z, ds: ds, c: c}
+	h := &H{Mux: r, l: logxi.New("handler"), ds: ds, c: c}
 	h.initialize()
 	return h
 }
 
 type H struct {
 	*chi.Mux
-	z  *zap.SugaredLogger
+	l  logxi.Logger
 	ds db.Datastore
 	c  *config.Conf
 }
@@ -35,7 +35,7 @@ func (h *H) AddRootCtx(next http.Handler) http.Handler {
 
 func (h *H) Start() {
 	addr := fmt.Sprintf("%s:%d", h.c.Http.Host, h.c.Http.Port)
-	h.z.Infof("Server listening on %s", addr)
+	h.l.Info("Server start listening", "addr", addr)
 	http.ListenAndServe(addr, h)
 }
 

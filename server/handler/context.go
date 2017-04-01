@@ -1,7 +1,7 @@
 package handler
 
 import (
-	log "github.com/inconshreveable/log15"
+	"github.com/mgutz/logxi"
 	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/util/fb"
 )
@@ -9,7 +9,7 @@ import (
 var RootCtxKey = &contextKey{"RootContext"}
 
 type RootCtx struct {
-	log   log.Logger
+	log   logxi.Logger
 	reqID string
 	user  *fb.User
 }

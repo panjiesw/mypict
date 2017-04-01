@@ -1,11 +1,13 @@
 package main
 
 import (
+	"github.com/mgutz/logxi"
 	"panjiesw.com/mypict/server/db"
 	"panjiesw.com/mypict/server/handler"
 	"panjiesw.com/mypict/server/util/config"
-	"panjiesw.com/mypict/server/util/logging"
 )
+
+var mlog = logxi.New("main")
 
 func init() {
 	config.BindEnv("MP")
@@ -14,22 +16,14 @@ func init() {
 func main() {
 	c, err := config.Parse("")
 	if err != nil {
-		panic(err)
+		mlog.Fatal("Failed to parse config", "err", err)
 	}
 
-	zc := logging.NewZapConfig(c.Env)
-	z, err := zc.Build()
+	d, err := db.Open(c)
 	if err != nil {
-		panic(err)
+		mlog.Fatal("Failed to open db connection", "err", err)
 	}
 
-	zl := z.Sugar().Named("server")
-
-	d, err := db.Open(c, zl.Named("db"))
-	if err != nil {
-		zl.Fatalf("Failed to open db connection: %v", err)
-	}
-
-	s := handler.New(c, d, zl.Named("handler"))
+	s := handler.New(c, d)
 	s.Start()
 }

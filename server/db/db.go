@@ -2,17 +2,12 @@ package db
 
 import (
 	"github.com/jackc/pgx"
+	"github.com/mgutz/logxi"
 	"github.com/ventu-io/go-shortid"
-	"go.uber.org/zap"
 	"panjiesw.com/mypict/server/util/config"
-	"panjiesw.com/mypict/server/util/logging"
 )
 
-func Open(conf *config.Conf, z *zap.SugaredLogger) (*Database, error) {
-	pgxLvl, err := pgx.LogLevelFromString(conf.Log.Lvl("db"))
-	if err != nil {
-		pgxLvl = pgx.LogLevelWarn
-	}
+func Open(conf *config.Conf) (*Database, error) {
 
 	pool, err := pgx.NewConnPool(pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
@@ -22,8 +17,8 @@ func Open(conf *config.Conf, z *zap.SugaredLogger) (*Database, error) {
 			Password:  conf.Database.Password,
 			TLSConfig: nil,
 			Database:  conf.Database.Name,
-			Logger:    logging.NewPGXLog(z),
-			LogLevel:  pgxLvl,
+			Logger:    &PgxLogger{log: logxi.New("pgx")},
+			LogLevel:  pgx.LogLevelInfo,
 		},
 		MaxConnections: conf.Database.Pool.MaxCon,
 	})
@@ -47,7 +42,7 @@ func Open(conf *config.Conf, z *zap.SugaredLogger) (*Database, error) {
 	}
 
 	return &Database{
-		z:    z,
+		l:    logxi.New("db"),
 		pool: pool,
 		siid: siid,
 		ssid: ssid,
@@ -56,7 +51,7 @@ func Open(conf *config.Conf, z *zap.SugaredLogger) (*Database, error) {
 }
 
 type Database struct {
-	z    *zap.SugaredLogger
+	l    logxi.Logger
 	pool *pgx.ConnPool
 	siid *shortid.Shortid
 	ssid *shortid.Shortid

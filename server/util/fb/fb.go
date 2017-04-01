@@ -5,13 +5,13 @@ import (
 
 	"net/http"
 
-	log "github.com/inconshreveable/log15"
+	"github.com/mgutz/logxi"
 	"github.com/spf13/viper"
 	"github.com/wuman/firebase-server-sdk-go"
 	"panjiesw.com/mypict/server/util/errs"
 )
 
-var logger = log.New("module", "fb")
+var logger = logxi.New("fb")
 
 func Initialize() (*firebase.App, error) {
 	p := viper.GetString("firebase.service_account_path")
