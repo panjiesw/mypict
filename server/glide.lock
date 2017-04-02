@@ -1,5 +1,5 @@
-hash: 2069b65020f48b68b2d9a48a98f71b8c89b954931892006bed0b70db8adc4cbe
-updated: 2017-04-01T13:19:27.527725007+07:00
+hash: be44e41743bf01366543d820123fd930810d3958095ca3f7d9e7fbd4fa70cec3
+updated: 2017-04-02T16:13:33.739697567+07:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: 4da3e2cfbabc9f751898f250b49f2439785783a1
@@ -15,7 +15,7 @@ imports:
   - json/scanner
   - json/token
 - name: github.com/jackc/pgx
-  version: 7bc5af61b8fb402c9c140e85b501ca7da5742bcb
+  version: b84338d7d62598f75859b2b146d830b22f1b9ec8
 - name: github.com/lib/pq
   version: 2704adc878c21e1329f46f6e56a1c387d788ff94
   subpackages:
@@ -43,6 +43,8 @@ imports:
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
 - name: github.com/mitchellh/mapstructure
   version: 53818660ed4955e899c0bcafa97299a388bd7c8e
+- name: github.com/oxtoacart/bpool
+  version: 4e1c5567d7c2dd59fa4c7c83d34c2f3528b025d6
 - name: github.com/pelletier/go-buffruneio
   version: c37440a7cf42ac63b919c752ca73a85067e05992
 - name: github.com/pelletier/go-toml

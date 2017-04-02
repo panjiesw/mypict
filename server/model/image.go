@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx"
@@ -20,32 +21,24 @@ type Image struct {
 	Title         null.String `json:"title"`
 	UserID        null.String `json:"uid"`
 	ContentPolicy uint8       `json:"cp"`
-	CreatedAt     time.Time   `json:"created"`
-	UpdatedAt     null.Time   `json:"updated"`
+	CreatedAt     *time.Time  `json:"created,omitempty"`
+	UpdatedAt     *time.Time  `json:"updated,omitempty"`
 }
 
-// ImageS is the model for creating new image
-type ImageS struct {
-	ID            string      `json:"id"`
-	Title         null.String `json:"title"`
-	ContentPolicy uint8       `json:"cp"`
+func (i *Image) String() string {
+	return fmt.Sprintf("Image<ID=%q Title=%q UserID=%q ContentPolicy=%d CreatedAt=%s UpdatedAt=%s>", i.ID, i.Title.String, i.UserID.String, i.ContentPolicy, i.CreatedAt, i.UpdatedAt)
 }
 
-// ImageSR returned after saving the image
-type ImageSR struct {
-	ID    string      `json:"id"`
-	Title null.String `json:"title"`
-	SID   null.String `json:"sid"`
+// ImageDTO returned when getting an image
+type ImageDTO struct {
+	*Image
+	//Title  string `json:"title,omitempty"`
+	//UserID string `json:"uid,omitempty"`
+	SID    string `json:"sid,omitempty"`
+	GTitle string `json:"gtitle,omitempty"`
+	GID    string `json:"gid,omitempty"`
 }
 
-// ImageR returned when getting an image
-type ImageR struct {
-	ID            string      `json:"id"`
-	Title         null.String `json:"title"`
-	UserID        null.String `json:"uid"`
-	SID           null.String `json:"sid"`
-	GalleryTitle  null.String `json:"gtitle"`
-	GalleryID     null.String `json:"gid"`
-	ContentPolicy uint8       `json:"cp"`
-	CreatedAt     string      `json:"created"`
+func (i *ImageDTO) String() string {
+	return fmt.Sprintf("ImageDTO<%s SID=%q GTitle=%q GID=%q>", i.Image, i.SID, i.GTitle, i.GID)
 }

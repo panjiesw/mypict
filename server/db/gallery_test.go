@@ -15,47 +15,78 @@ func TestDatabase_GalleryByID(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *model.GalleryR
+		want    *model.GalleryDTO
 		wantErr bool
 	}{
 		{
 			name: "ID LkwzNLWkg",
 			args: args{id: "LkwzNLWkg"},
-			want: &model.GalleryR{
-				ID:            "LkwzNLWkg",
-				Title:         null.StringFrom("Volutpat Quam Pede"),
-				UserID:        null.StringFrom("XpJrI2neRED"),
-				ContentPolicy: 1,
-				Images: []model.ImageSR{
+			want: &model.GalleryDTO{
+				Gallery: &model.Gallery{
+					ID:            "LkwzNLWkg",
+					ContentPolicy: 1,
+					Title:         null.StringFrom("Volutpat Quam Pede"),
+					UserID:        null.StringFrom("XpJrI2neRED"),
+				},
+				Images: []*model.ImageDTO{
 					{
-						ID:    "Sw9rILWzgX",
-						SID:   null.StringFrom("sPL_CSMzR2"),
-						Title: null.StringFrom("Suscipit Nulla Elit"),
+						Image: &model.Image{
+							ID:            "Sw9rILWzgX",
+							ContentPolicy: 1,
+							UserID:        null.StringFrom("XpJrI2neRED"),
+							Title:         null.StringFrom("Suscipit Nulla Elit"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "sPL_CSMzR2",
 					},
 					{
-						ID:    "IQ99SYWkR8",
-						SID:   null.StringFrom("sELljSMkgR"),
-						Title: null.StringFrom("Diam Cras Pellentesque Volutpat Dui"),
+						Image: &model.Image{
+							ID:            "IQ99SYWkR8",
+							ContentPolicy: 1,
+							UserID:        null.StringFrom("XpJrI2neRED"),
+							Title:         null.StringFrom("Diam Cras Pellentesque Volutpat Dui"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "sELljSMkgR",
 					},
 					{
-						ID:    "IQ9rSYWzR1",
-						SID:   null.StringFrom("yPL_jSMzR_"),
-						Title: null.StringFrom("Nibh In Quis Justo"),
+						Image: &model.Image{
+							ID:            "IQ9rSYWzR1",
+							ContentPolicy: 1,
+							UserID:        null.StringFrom("XpJrI2neRED"),
+							Title:         null.StringFrom("Nibh In Quis Justo"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "yPL_jSMzR_",
 					},
 					{
-						ID:    "IQr9SLZkRO",
-						SID:   null.StringFrom("sEL_jIGkRY"),
-						Title: null.StringFrom("Rhoncus Dui Vel"),
+						Image: &model.Image{
+							ID:            "IQr9SLZkRO",
+							ContentPolicy: 1,
+							UserID:        null.StringFrom("XpJrI2neRED"),
+							Title:         null.StringFrom("Rhoncus Dui Vel"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "sEL_jIGkRY",
 					},
 					{
-						ID:    "IQrrILWkgZ",
-						SID:   null.StringFrom("sELljIGkR1"),
-						Title: null.StringFrom("Turpis Donec Posuere Metus"),
+						Image: &model.Image{
+							ID:     "IQrrILWkgZ",
+							UserID: null.StringFrom("XpJrI2neRED"),
+							Title:  null.StringFrom("Turpis Donec Posuere Metus"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "sELljIGkR1",
 					},
 					{
-						ID:    "4QrrSYWkgh",
-						SID:   null.StringFrom("yEL_CSGkgI"),
-						Title: null.StringFrom("Pulvinar Nulla Pede"),
+						Image: &model.Image{
+							ID:            "4QrrSYWkgh",
+							ContentPolicy: 1,
+							UserID:        null.StringFrom("XpJrI2neRED"),
+							Title:         null.StringFrom("Pulvinar Nulla Pede"),
+						},
+						GID: "LkwzNLWkg",
+						SID: "yEL_CSGkgI",
 					},
 				},
 			},
@@ -70,9 +101,8 @@ func TestDatabase_GalleryByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var got model.GalleryR
+			var got model.GalleryDTO
 			err := d.GalleryByID(tt.args.id, &got)
-			got.CreatedAt = ""
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Database.GalleryByID() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -82,8 +112,15 @@ func TestDatabase_GalleryByID(t *testing.T) {
 				return
 			}
 
+			got.Gallery.CreatedAt = nil
+			for _, img := range got.Images {
+				if img.Image.ID == "" {
+					t.Errorf("Database.GalleryByID() id not generated = %s", img.Image.Title)
+				}
+				img.Image.CreatedAt = nil
+			}
 			if !reflect.DeepEqual(&got, tt.want) {
-				t.Errorf("Database.GalleryByID() = %v, want %v", &got, tt.want)
+				t.Errorf("Database.GalleryByID() = \n%v, want \n%v", &got, tt.want)
 			}
 		})
 	}
@@ -91,8 +128,7 @@ func TestDatabase_GalleryByID(t *testing.T) {
 
 func TestDatabase_GallerySave(t *testing.T) {
 	type args struct {
-		g   model.GalleryS
-		uid null.String
+		g *model.GalleryDTO
 	}
 	tests := []struct {
 		name    string
@@ -102,38 +138,61 @@ func TestDatabase_GallerySave(t *testing.T) {
 		{
 			name: "3 no uid no error",
 			args: args{
-				g: model.GalleryS{
-					Title:         null.StringFrom("gallery1"),
-					ContentPolicy: 1,
-					Images: []model.ImageS{
-						{ID: "image1", Title: null.StringFrom("image1"), ContentPolicy: 0},
-						{ID: "image2", Title: null.NewString("", false), ContentPolicy: 1},
-						{ID: "image3", Title: null.StringFrom("image3"), ContentPolicy: 1},
+				g: &model.GalleryDTO{
+					Gallery: &model.Gallery{
+						Title:         null.StringFrom("gallery1"),
+						ContentPolicy: 1,
+					},
+					Images: []*model.ImageDTO{
+						{
+							Image: &model.Image{
+								ID:            "image1",
+								Title:         null.StringFrom("image1"),
+								ContentPolicy: 0,
+							},
+						},
+						{
+							Image: &model.Image{
+								ID:            "image2",
+								Title:         null.NewString("", false),
+								ContentPolicy: 1,
+							},
+						},
+						{
+							Image: &model.Image{
+								ID:            "image3",
+								Title:         null.StringFrom("image3"),
+								ContentPolicy: 1,
+							},
+						},
 					},
 				},
-				uid: null.NewString("", false),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := d.GallerySave(tt.args.g, tt.args.uid)
+			err := d.GallerySave(tt.args.g)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Database.GallerySave() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
-			if got.ID == "" {
+			if tt.wantErr {
+				return
+			}
+
+			if tt.args.g.ID == "" {
 				t.Error("Database.GallerySave() gid not generated")
 				return
 			}
 
-			for _, img := range got.Images {
-				if img.ID == "" {
+			for _, img := range tt.args.g.Images {
+				if img.Image.ID == "" {
 					t.Error("Database.GallerySave() iid not generated")
 					break
 				}
-				if !img.SID.Valid {
+				if img.SID == "" {
 					t.Error("Database.GallerySave() sid not generated")
 					break
 				}

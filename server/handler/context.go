@@ -1,12 +1,18 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/mgutz/logxi"
 	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/util/fb"
 )
 
 var RootCtxKey = &contextKey{"RootContext"}
+
+func GetContext(r *http.Request) *RootCtx {
+	return r.Context().Value(RootCtxKey).(*RootCtx)
+}
 
 type RootCtx struct {
 	log   logxi.Logger
@@ -19,7 +25,7 @@ func (r *RootCtx) IsLoggedIn() bool {
 }
 
 func (r *RootCtx) UID() null.String {
-	if r.IsLoggedIn() {
+	if !r.IsLoggedIn() {
 		return null.NewString("", false)
 	}
 	if r.user.ID == "" {

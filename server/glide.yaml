@@ -16,3 +16,4 @@ import:
   version: 84f94806c67f59dd7ae87bc5351f7a9c94a4558d
 - package: github.com/mgutz/logxi
   version: mgutz/v2
+- package: github.com/oxtoacart/bpool

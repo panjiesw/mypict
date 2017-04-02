@@ -2,80 +2,50 @@ package db
 
 import (
 	"github.com/jackc/pgx"
-	"gopkg.in/nullbio/null.v6"
 	"panjiesw.com/mypict/server/model"
 	"panjiesw.com/mypict/server/util/errs"
 )
 
-func (d *Database) imageBSave(tx *pgx.Tx, imgs []model.ImageS, uid null.String) *errs.AError {
+func (d *Database) imageBSave(tx *pgx.Tx, imgs []*model.ImageDTO) error {
 	inputRows := [][]interface{}{}
 	columns := []string{"id", "title", "uid", "cp"}
 
 	for _, img := range imgs {
-		inputRows = append(inputRows, []interface{}{img.ID, img.Title, uid, img.ContentPolicy})
+		inputRows = append(inputRows, []interface{}{img.Image.ID, img.Image.Title, img.Image.UserID, img.Image.ContentPolicy})
 	}
 
 	n, err := tx.CopyFrom(model.ImageTableI, columns, pgx.CopyFromRows(inputRows))
 	if err != nil {
-		d.l.Error("Failed to save image", "error", err, "uid", uid, "imgs", imgs)
+		d.l.Error("Failed to save image", "err", err, "imgs", imgs)
 		return errs.NewDB("Failed to save image")
 	} else if n != len(imgs) {
-		d.l.Error("Saved image count not match", "want", len(imgs), "got", n, "uid", uid, "imgs", imgs)
+		d.l.Error("Saved image count not match", "want", len(imgs), "got", n, "imgs", imgs)
 		return errs.NewDB("Invalid saved image state")
 	}
 	return nil
 }
 
-func (d *Database) imageIDBSave(tx *pgx.Tx, imgs []model.ImageS, gid null.String) ([]model.ImageSR, *errs.AError) {
-	inputRows := [][]interface{}{}
-	columns := []string{"iid", "sid", "gid"}
-
-	results := []model.ImageSR{}
-
-	for _, img := range imgs {
-		sid, err := d.ssid.Generate()
-		if err != nil {
-			d.l.Error("Failed to generate image sid", "err", err, "img", img, "gid", gid)
-			return nil, errs.NewDB("Failed to generate sid")
-		}
-		inputRows = append(inputRows, []interface{}{img.ID, sid, gid})
-		results = append(results,
-			model.ImageSR{ID: img.ID, Title: img.Title, SID: null.StringFrom(sid)})
-	}
-
-	n, err := tx.CopyFrom(model.ImageIDTableI, columns, pgx.CopyFromRows(inputRows))
-	if err != nil {
-		d.l.Error("Bulk insert image ids failed", "err", err)
-		return nil, errs.NewDB("Failed to save image ids")
-	} else if n != len(imgs) {
-		d.l.Error("Saved image ids count not match", "want", len(imgs), "got", n)
-		return nil, errs.NewDB("Invalid saved image ids state")
-	}
-
-	return results, nil
-}
-
-func (d *Database) ImageBSave(imgs []model.ImageS, uid null.String) *errs.AError {
+func (d *Database) ImageBSave(imgs []*model.ImageDTO) error {
 	tx, err := d.pool.Begin()
 	if err != nil {
-		d.l.Error("Transaction not acquired", "err", err, "uid", uid)
+		d.l.Error("Transaction not acquired", "err", err, "imgs", imgs)
 		return errs.NewDB("Failed to acquire tx")
 	}
 	defer tx.Rollback()
 
-	if err := d.imageBSave(tx, imgs, uid); err != nil {
+	if err := d.imageBSave(tx, imgs); err != nil {
 		return err
 	}
 
 	if err := tx.Commit(); err != nil {
-		d.l.Error("Transaction failed to be committed", "err", err, "uid", uid)
+		d.l.Error("Transaction failed to be committed", "err", err, "imgs", imgs)
 		return errs.NewDB("Invalid saved image state")
 	}
 
 	return nil
 }
 
-func (d *Database) ImageByID(id string, img *model.ImageR) *errs.AError {
+func (d *Database) ImageByID(id string, img *model.ImageDTO) error {
 	//noinspection SqlResolve
 	query := `
 	SELECT row_to_json(img)
@@ -108,10 +78,11 @@ func (d *Database) ImageByID(id string, img *model.ImageR) *errs.AError {
 	return nil
 }
 
-func (d *Database) ImageGenerateID() (null.String, *errs.AError) {
+func (d *Database) ImageGenerateID() (string, error) {
 	s, err := d.siid.Generate()
 	if err != nil {
-		return null.NewString("", false), errs.NewDB("Failed to generate id")
+		d.l.Error("Failed to generate image id", "err", err)
+		return "", errs.NewDB("Failed to generate id")
 	}
-	return null.StringFrom(s), nil
+	return s, nil
 }
