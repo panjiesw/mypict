@@ -125,24 +125,35 @@ func (h *H) uploader(reader *multipart.Reader, ctx *RootCtx) (*model.GalleryDTO,
 			return nil, err
 		}
 
-		dst, err := os.Create(part.FileName())
+		dir := h.c.Picture.PictDir(gallery.UserID, iid)
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			ctx.log.Error("Failed to create dirs", "err", err, "dir", dir)
+			return nil, err
+		}
+		fLoc := h.c.Picture.PictLoc(dir, part.FileName())
+
+		dst, err := os.Create(fLoc)
 		if err != nil {
 			ctx.log.Error("Failed to create image file", "err", err)
 			//RenderError(w, r, err)
 			return nil, err
 		}
-		//noinspection GoDeferInLoop
-		defer dst.Close()
 
-		if _, err := io.Copy(dst, part); err != nil {
+		if _, err := io.Copy(dst, part); err != nil && err != io.EOF {
 			ctx.log.Error("Failed to write image file", "err", err)
-			//RenderError(w, r, err)
+			//noinspection GoDeferInLoop
+			defer os.Remove(fLoc)
+			//noinspection GoDeferInLoop
+			defer dst.Close()
 			return nil, err
 		}
+		//noinspection GoDeferInLoop
+		defer dst.Close()
 
 		imgs = append(imgs, &model.ImageDTO{Image: &model.Image{
 			ID:            iid,
 			Title:         null.StringFrom(part.FileName()),
+			FileName:      part.FileName(),
 			UserID:        gallery.UserID,
 			ContentPolicy: gallery.ContentPolicy,
 		}})

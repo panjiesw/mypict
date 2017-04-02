@@ -8,10 +8,16 @@ import (
 
 func (d *Database) imageBSave(tx *pgx.Tx, imgs []*model.ImageDTO) error {
 	inputRows := [][]interface{}{}
-	columns := []string{"id", "title", "uid", "cp"}
+	columns := []string{"id", "title", "filename", "uid", "cp"}
 
 	for _, img := range imgs {
-		inputRows = append(inputRows, []interface{}{img.Image.ID, img.Image.Title, img.Image.UserID, img.Image.ContentPolicy})
+		inputRows = append(inputRows, []interface{}{
+			img.Image.ID,
+			img.Image.Title,
+			img.Image.FileName,
+			img.Image.UserID,
+			img.Image.ContentPolicy,
+		})
 	}
 
 	n, err := tx.CopyFrom(model.ImageTableI, columns, pgx.CopyFromRows(inputRows))
@@ -53,6 +59,7 @@ func (d *Database) ImageByID(id string, img *model.ImageDTO) error {
 		SELECT
 			img.id as id,
 			img.title as title,
+			img.filename as filename,
 			img.uid as uid,
 			ids.sid as sid,
 			ids.gid as gid,

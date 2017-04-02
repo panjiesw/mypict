@@ -19,6 +19,7 @@ var (
 type Image struct {
 	ID            string      `json:"id"`
 	Title         null.String `json:"title"`
+	FileName      string      `json:"filename"`
 	UserID        null.String `json:"uid"`
 	ContentPolicy uint8       `json:"cp"`
 	CreatedAt     *time.Time  `json:"created,omitempty"`
@@ -26,7 +27,8 @@ type Image struct {
 }
 
 func (i *Image) String() string {
-	return fmt.Sprintf("Image<ID=%q Title=%q UserID=%q ContentPolicy=%d CreatedAt=%s UpdatedAt=%s>", i.ID, i.Title.String, i.UserID.String, i.ContentPolicy, i.CreatedAt, i.UpdatedAt)
+	return fmt.Sprintf("Image<ID=%q Title=%q FileName=%q UserID=%q ContentPolicy=%d CreatedAt=%s UpdatedAt=%s>",
+		i.ID, i.Title.String, i.FileName, i.UserID.String, i.ContentPolicy, i.CreatedAt, i.UpdatedAt)
 }
 
 // ImageDTO returned when getting an image

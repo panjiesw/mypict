@@ -26,6 +26,7 @@ func TestDatabase_ImageByID(t *testing.T) {
 					ID:            "Iwr9ILZkRC",
 					ContentPolicy: 1,
 					Title:         null.StringFrom("sapien ut nunc vestibulum"),
+					FileName:      "sapien ut nunc vestibulum.jpg",
 					UserID:        null.NewString("", false),
 				},
 				SID:    "",
@@ -42,6 +43,7 @@ func TestDatabase_ImageByID(t *testing.T) {
 					ID:            "4wrrIYZkgm",
 					ContentPolicy: 1,
 					Title:         null.StringFrom("Nisl Nunc Rhoncus Dui Vel"),
+					FileName:      "Nisl Nunc Rhoncus Dui Vel.jpg",
 					UserID:        null.StringFrom("KXapjMA"),
 				},
 				SID:    "sELljSGzg",
@@ -58,6 +60,7 @@ func TestDatabase_ImageByID(t *testing.T) {
 					ID:            "VQ99SYZzgZ",
 					ContentPolicy: 0,
 					Title:         null.StringFrom("Mauris Morbi Non Lectus"),
+					FileName:      "Mauris Morbi Non Lectus.jpg",
 					UserID:        null.StringFrom("UpUAY3Ix"),
 				},
 				SID:    "yPLlCIGkgz",
@@ -112,6 +115,7 @@ func TestDatabase_ImageBSave(t *testing.T) {
 							ID:            "foobar1",
 							ContentPolicy: 0,
 							Title:         null.StringFrom("foobar1"),
+							FileName:      "foobar1.jpg",
 						},
 					},
 					{
@@ -119,6 +123,7 @@ func TestDatabase_ImageBSave(t *testing.T) {
 							ID:            "foobar2",
 							ContentPolicy: 1,
 							Title:         null.NewString("", false),
+							FileName:      "foobar2.jpg",
 						},
 					},
 					{
@@ -126,6 +131,7 @@ func TestDatabase_ImageBSave(t *testing.T) {
 							ID:            "foobar3",
 							ContentPolicy: 1,
 							Title:         null.StringFrom("foobar3"),
+							FileName:      "foobar3.jpg",
 						},
 					},
 				},
@@ -138,15 +144,17 @@ func TestDatabase_ImageBSave(t *testing.T) {
 				imgs: []*model.ImageDTO{
 					{
 						Image: &model.Image{
-							ID:     "foobar4",
-							Title:  null.StringFrom("foobar4"),
-							UserID: null.StringFrom("user1"),
+							ID:       "foobar4",
+							Title:    null.StringFrom("foobar4"),
+							FileName: "foobar4.jpg",
+							UserID:   null.StringFrom("user1"),
 						},
 					},
 					{
 						Image: &model.Image{
 							ID:            "foobar5",
 							Title:         null.NewString("", false),
+							FileName:      "foobar5.jpg",
 							ContentPolicy: 1,
 							UserID:        null.StringFrom("user1"),
 						},
@@ -155,6 +163,7 @@ func TestDatabase_ImageBSave(t *testing.T) {
 						Image: &model.Image{
 							ID:            "foobar6",
 							Title:         null.StringFrom("foobar6"),
+							FileName:      "foobar6.jpg",
 							ContentPolicy: 1,
 							UserID:        null.StringFrom("user1"),
 						},

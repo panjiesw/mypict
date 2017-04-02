@@ -3,8 +3,13 @@ package config
 import (
 	"fmt"
 
+	"os"
+
 	"github.com/spf13/viper"
+	"gopkg.in/nullbio/null.v6"
 )
+
+var PS = string(os.PathSeparator)
 
 func init() {
 	viper.SetConfigName("config")
@@ -44,17 +49,21 @@ func BindEnv(prefix string) {
 	viper.BindEnv("log.default", fmt.Sprintf("%s_LOG", prefix))
 	viper.BindEnv("log.level.db", fmt.Sprintf("%s_DB_LOG", prefix))
 
+	viper.BindEnv("picture.dir", fmt.Sprintf("%s_PIC_DIR", prefix))
+
 	viper.SetDefault("env", "development")
 	viper.SetDefault("log.default", "info")
 	viper.SetDefault("http.host", "localhost")
 	viper.SetDefault("http.port", 3000)
+	viper.SetDefault("picture.dir", fmt.Sprintf(".%spictures", string(os.PathSeparator)))
 }
 
 type Conf struct {
-	Env      string `mapstructure:"env"`
-	Database DB     `mapstructure:"database"`
-	Http     Http   `mapstructure:"http"`
-	Log      Log    `mapstructure:"log"`
+	Env      string  `mapstructure:"env"`
+	Database DB      `mapstructure:"database"`
+	Http     Http    `mapstructure:"http"`
+	Log      Log     `mapstructure:"log"`
+	Picture  Picture `mapstructure:"picture"`
 }
 
 type DB struct {
@@ -84,4 +93,27 @@ func (l Log) Lvl(module string) string {
 		return level
 	}
 	return l.Default
+}
+
+type Picture struct {
+	Dir string `mapstructure:"dir"`
+}
+
+func (p Picture) PictLoc(pictDir, file string) string {
+	return fmt.Sprintf("%s%s%s", pictDir, PS, file)
+}
+
+func (p Picture) ThumbLoc(thumbDir, file string, size int) string {
+	return fmt.Sprintf("%s%sth_%d_%s", thumbDir, PS, size, file)
+}
+
+func (p Picture) PictDir(user null.String, id string) string {
+	if user.Valid {
+		return fmt.Sprintf("%s%susers%s%s%s%s", p.Dir, PS, PS, user.String, PS, id)
+	}
+	return fmt.Sprintf("%s%sunknown%s%s", p.Dir, PS, PS, id)
+}
+
+func (p Picture) ThumbDir(pictDir string) string {
+	return fmt.Sprintf("%s%sthumb", pictDir, PS)
 }
